@@ -5,4 +5,5 @@ munzip/EvaKissCollection
 mkzip/EvaKissCollection.zip
 mkzip/backup.zip
 mkzip/EvaKissCollection
+tgutils/utils-old.py
 */__pycache__

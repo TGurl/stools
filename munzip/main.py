@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 import argparse
 import subprocess
 
@@ -20,7 +21,7 @@ class MUnzip(TGutils):
     def header(self):
         if self.clearscreen:
             subprocess.call('clear')
-        self.printf("MUnzip v0.02a - part of Transgirl's Simple Tools", nl=True)
+        self.printf("MUnzip v0.03a - part of Transgirl's Simple Tools", nl=True)
 
     def undress_archive(self, archive):
         fmt = "{:<14}: {}"
@@ -55,27 +56,37 @@ class MUnzip(TGutils):
         except Exception as e:
             self.err(f"An unknown error occurred:\n\n{e}", exit_app=True)
 
+    def run(self, archives, dest):
+        self.header()
+        total = len(archives)
+        w = len(str(total))
+        fmt = "{:<14}: {}"
+
+        for i, archive in enumerate(archives, start=1):
+            arcsize = self.bytes_to_human_readable(os.stat(archive).st_size)
+            self.fprint('Processing', f"{i:>{w}} of {total}", fmt=fmt)
+            self.fprint('Size', arcsize, fmt=fmt)
+            self.fprint('Unzipping', archive, fmt=fmt)
+            self.fprint('Destination', dest, fmt=fmt)
+            self.undress_archive(archive)
+            if i < total:
+                self.clearlines(num=6)
+        self.msg('All done...', colors=True)
+
     def main(self, args):
         if args.output:
             self.output = args.output
 
         self.keeparchive = args.keep
         self.clearscreen = args.clear 
-       
-        self.header()
-        total_archives = len(args.archives)
-        w = len(str(total_archives))
-        fmt = "{:<14}: {}"
-
-        for i, archive in enumerate(args.archives, start=1):
-            arcsize = self.bytes_to_human_readable(os.stat(archive).st_size)
-            self.fprint('Processing', f"{i:>{w}} of {total_archives}", fmt=fmt)
-            self.fprint('Size', arcsize, fmt=fmt)
-            self.fprint('Unzipping', archive, fmt=fmt)
-            self.undress_archive(archive)
-            if i < total_archives:
-                self.clearlines(num=4)
-        self.msg('All done...', colors=True)
+      
+        dest = os.getcwd() if self.output == '.' else self.output
+        
+        try:
+            self.run(args.archives, dest)
+        except KeyboardInterrupt:
+            self.printf('\n\nProgram interrupted by user. Exiting gracefully...')
+            sys.exit()
 
 
 if __name__ == '__main__':
