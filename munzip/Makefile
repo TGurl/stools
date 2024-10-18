@@ -1,5 +1,5 @@
 FLAG = --onefile
-APPNAME = mkzip
+APPNAME = munzip
 
 install: build move clean
 
