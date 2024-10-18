@@ -46,7 +46,9 @@ class MUnzip(TGutils):
                             os.chmod(extracted_path, unix_attr)
                     self.clearlines()
             
+            arcsize = self.bytes_to_human_readable(os.stat(self.output).st_size)
             self.fprint('Extracting', '[100%] Done', fmt=fmt)
+            self.fprint('Size', arcsize)
 
         except FileNotFoundError:
             self.err(f"Unable to open {archive}!", exit_app=True)

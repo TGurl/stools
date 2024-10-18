@@ -46,7 +46,7 @@ class TGutils:
         line = f"%r{arrow}%R {message}"
         self.printf(line, remove_colors=not colors, nl=nl)
         if exit_app:
-            sys.exit()
+            sys.exit(69)
 
     def boxit(self, message, col='%c', clear=False, ascii=False, colors=False, nl=False):
         if ascii:
