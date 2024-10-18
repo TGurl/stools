@@ -1,5 +1,9 @@
-from colors import Colors
+import sys
+import shutil
 import subprocess
+
+from colors import Colors
+
 
 class TGutils:
     """
@@ -9,6 +13,12 @@ class TGutils:
     """
     def __init__(self):
         pass
+
+    # ------------------------------------------------------------------------
+    # --- check if a command exists on your system
+    # ------------------------------------------------------------------------
+    def check_if_command_exists(self, command):
+        return shutil.which(command) is not None
 
     # ------------------------------------------------------------------------
     # --- bytes to human readable
@@ -24,7 +34,21 @@ class TGutils:
     # ------------------------------------------------------------------------
     # --- cli utils
     # ------------------------------------------------------------------------
-    def header(self, message, col='%c', clear=False, ascii=False, colors=False, nl=False):
+    def msg(self, message, arrow='>', colors=False, nl=False):
+        line = f"%g{arrow}%R {message}"
+        self.printf(line, remove_colors=not colors, nl=nl)
+    
+    def warn(self, message, arrow='>', colors=False, nl=False):
+        line = f"%y{arrow}%R {message}"
+        self.printf(line, remove_colors=not colors, nl=nl)
+    
+    def err(self, message, arrow='>', colors=False, nl=False, exit_app=False):
+        line = f"%r{arrow}%R {message}"
+        self.printf(line, remove_colors=not colors, nl=nl)
+        if exit_app:
+            sys.exit()
+
+    def boxit(self, message, col='%c', clear=False, ascii=False, colors=False, nl=False):
         if ascii:
             chars = ['+', '+', '+', '+', '-', '|']
         else:
@@ -50,8 +74,8 @@ class TGutils:
         line = self.colorize(message, remove_colors=remove_colors)
         print(line, end=end)
 
-    def fprint(self, key, value, fmt='{} {}', remove_colors=False, nl=False):
-        line = fmt.format(key, value)
+    def fprint(self, key, value, fmt='{} {}', arrow='>', remove_colors=False, nl=False):
+        line = f"%c{arrow}%R " + fmt.format(key, value)
         self.printf(line, remove_colors=remove_colors, nl=nl)
 
     def clearlines(self, num=1):
