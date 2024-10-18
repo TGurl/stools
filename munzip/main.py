@@ -66,11 +66,13 @@ class MUnzip(TGutils):
         fmt = "{:<14}: {}"
 
         for i, archive in enumerate(args.archives, start=1):
-            self.fprint(f'Processing', f"{i:>{w}} of {total_archives}", fmt=fmt)
-            self.fprint(f'Unzipping', archive, fmt=fmt)
+            arcsize = self.bytes_to_human_readable(os.stat(archive).st_size)
+            self.fprint('Processing', f"{i:>{w}} of {total_archives}", fmt=fmt)
+            self.fprint('Size', arcsize, fmt=fmt)
+            self.fprint('Unzipping', archive, fmt=fmt)
             self.undress_archive(archive)
             if i < total_archives:
-                self.clearlines(num=3)
+                self.clearlines(num=4)
         self.msg('All done...', colors=True)
 
 
