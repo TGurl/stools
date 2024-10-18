@@ -20,7 +20,7 @@ class MUnzip(TGutils):
     def header(self):
         if self.clearscreen:
             subprocess.call('clear')
-        self.printf("MUnzip v0.01a - part of Transgirl's Simple Tools", nl=True)
+        self.printf("MUnzip v0.02a - part of Transgirl's Simple Tools", nl=True)
 
     def undress_archive(self, archive):
         fmt = "{:<14}: {}"
