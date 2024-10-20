@@ -8,24 +8,37 @@ class TGUtils:
         self.app_slogan = 'SET SLOGAN HERE'
     
     # -------------------------------------------------------- APP HEADER
-    def app_header(self, colors=True, clear_screen=False, nl=True):
+    def app_header(self, col='%c', colors=True, clear_screen=False, nl=True, rounded=False):
+        title = f"{self.app_title} - {self.app_slogan}"
+        self.boxit(title, col=col, colors=colors, clear_screen=clear_screen, nl=nl, rounded=rounded)
+
+    # ---------------------------------------------------------- BOX IT
+    def boxit(self, message, col='%c', colors=True, rounded=False, clear_screen=False, nl=False):
+        if rounded:
+            chars = ['╭', '╮', '╰', '╯', '─', '│']
+        else:
+            chars = ['┌', '┐', '└', '┘', '─', '│']
+        temp = self.colorize(message, remove_colors=True)
+        horline = (len(temp) + 2) * chars[4]
+
         if clear_screen:
             subprocess.call('clear')
 
-        title = f"%y{self.app_title}%R - %g{self.app_slogan}%R"
-        self.printf(title, colors=colors, nl=nl)
+        self.printf(f"{col}{chars[0]}{horline}{chars[1]}%R", colors=colors)
+        self.printf(f"{col}{chars[5]}%R {message} {col}{chars[5]}%R", colors=colors)
+        self.printf(f"{col}{chars[2]}{horline}{chars[3]}%R", colors=colors, nl=nl)
 
     # ---------------------------------------------------------- MESSAGES
     def message(self, string, arrow='>', colors=True, nl=False):
-        message = f"%g{arrow}%R {string}"
+        message = f"%g {arrow}%R {string}"
         self.printf(message, colors=colors, nl=nl)
     
     def warning(self, string, arrow='>', colors=True, nl=False):
-        message = f"%y{arrow}%R {string}"
+        message = f"%y {arrow}%R {string}"
         self.printf(message, colors=colors, nl=nl)
     
     def error(self, string, arrow='!!', colors=True, nl=False, exit_app=False):
-        message = f"%r{arrow}%R {string}"
+        message = f"%r {arrow}%R {string}"
         if exit_app:
             message += ', exiting...'
         self.printf(message, colors=colors, nl=nl)
